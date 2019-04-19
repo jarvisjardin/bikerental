@@ -1,0 +1,178 @@
+<!--
+
+- Develop a simple product reservation page for bike rentals.
+- Using the attached JSON data, provide the user with the option
+to rent bikes.
+- You have the option to use any technologies available to you, or simple HTML, CSS, and JS.
+- The system should be able to validate the user’s selection.
+- The content displayed should be responsive for mobile and desktop.
+- Provide access to the see the code and a link to see the page working.
+
+ -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .container {
+      border-radius: 5px;
+      background-color: #f2f2f2;
+      padding: 20px;
+      max-width: 75%;
+      margin: 0 auto;
+    }
+
+    input[type=text],
+    input[type=email],
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      margin-top: 6px;
+      margin-bottom: 16px;
+      resize: vertical;
+    }
+
+    input[type=submit] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    input[type=submit]:hover {
+      background-color: #45a049;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    table, th, td {
+      border: 1px solid black;
+    }
+
+    th, td {
+      padding: 5px;
+    }
+
+    td > img{
+      width: 50%;
+      margin: 0 auto;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <form name="reserve" action="javascript:;" onsubmit="return submitForm(this)" method="post">
+      <div>
+      <label for="firstname">First Name</label>
+      <input type="text" id="firstname" name="firstname" placeholder="Your first name.." required="required">
+
+      <label for="lastname">Last Name</label>
+      <input type="text" id="lastname" name="lastname" placeholder="Your last name.." required="required">
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="Your email.." required="required">
+
+      </div>
+      
+      <table id="rentals">
+
+      </table>
+
+      </br>
+
+      <input type="submit" value="Submit">
+
+    </form>
+  </div>
+
+<script type="text/javascript">
+  var bike_json;
+  var table_header = false;
+  var client = new XMLHttpRequest();
+
+  client.open('GET', 'bikerentals.json', false);
+  client.onreadystatechange = function() {
+    bike_json = JSON.parse(client.responseText).products;
+  }
+  client.send('false');
+
+  for(var i = 0; i < bike_json.length; i++ ){
+
+    if(table_header == false){
+
+      document.getElementById("rentals").innerHTML +=
+        "<tr>" +
+        "<th></th>" +
+        "<th>Product Name </th>" +
+        "<th>Price </th>" +
+        "<th>Product Type</th>" +
+        "<th></th>" +
+        "</tr>";
+
+      table_header = true;
+    }
+
+    var td =
+      "<tr>"+
+      "<td><input id='products' name='products"+ bike_json[i].id + "' type='checkbox' value='" + bike_json[i].name + "'></td>" +
+      "<td>" + bike_json[i].name + "</td>" +
+      "<td>$" + (bike_json[i].price).toFixed(2) + "</td>" +
+      "<td>" + (bike_json[i].product_type).charAt(0).toUpperCase()+(bike_json[i].product_type).slice(1) + "</td>" +
+      "<td><img src='" + bike_json[i].image + "' alt='" + bike_json[i].name + "' > </td>" +
+      "</tr>";
+
+    document.getElementById("rentals").innerHTML += td;
+
+  }
+
+  function submitForm(form){
+    var checked = {};
+    var total = 0;
+
+    for(var i = 0; i < form.products.length; i++){
+
+      if(form.products[i].checked){
+        checked[i] = bike_json[i];
+        total += bike_json[i].price;
+      }
+    }
+
+    if(Object.entries(checked).length === 0 && checked.constructor === Object){
+      alert('Please Select Products');
+    }else{
+
+      var userInfo = {name: form.firstname.value + " " + form.lastname.value, email: form.email.value, products : checked, total: '$'+total.toFixed(2) };
+      var myJSON = JSON.stringify(userInfo);
+
+      console.log(userInfo);
+
+    }
+
+
+
+    return false;
+  }
+
+</script>
+
+</body>
+</html>
