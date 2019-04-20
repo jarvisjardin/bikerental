@@ -13,6 +13,8 @@ to rent bikes.
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
     * {
       box-sizing: border-box;
@@ -75,6 +77,12 @@ to rent bikes.
       margin: 0 auto;
     }
 
+    @media only screen and (max-width: 768px) {
+      .container {
+        max-width: 100%;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -92,7 +100,7 @@ to rent bikes.
       <input type="email" id="email" name="email" placeholder="Your email.." required="required">
 
       </div>
-      
+
       <table id="rentals">
 
       </table>
